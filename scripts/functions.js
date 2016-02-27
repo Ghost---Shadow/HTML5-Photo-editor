@@ -6,18 +6,9 @@ $(document).ready(function(){
 
 	var img = new Image();
 	img.crossOrigin = "Anonymous";
-	src = "http://ghost---shadow.github.io/HTML5-Photo-editor/cats/original.jpg"
 
-	// Initialize the image on load
-	img.onload = function(){
-		canvas.width = img.width;
-		canvas.height = img.height;
-		ctx.drawImage(img, 0, 0);
-		localStorage.setItem( "savedImageData", canvas.toDataURL("image/jpg") );
-	}
-
-	// Temporary source for the image
-	img.src = src
+	// Temporary source for image
+	img.src = "http://i.imgur.com/TsZWr4p.jpg"
 
 	var W = img.width;
 	var H = img.height;
