@@ -5,20 +5,28 @@ $(document).ready(function(){
 	var ctx = canvas.getContext("2d");	
 
 	var img = new Image();
+	img.crossOrigin = "Anonymous";
+	src = "./cats/original.jpg"
 
 	// Initialize the image on load
 	img.onload = function(){
-		var W = img.width;
-		var H = img.height;
-		canvas.width = W;
-		canvas.height = H;
+		canvas.width = img.width;
+		canvas.height = img.height;
 		ctx.drawImage(img, 0, 0);
+		localStorage.setItem( "savedImageData", canvas.toDataURL("image/jpg") );
 	}
 
 	// Temporary source for the image
-	img.src = "./cats/original.jpg"
+	img.src = src
+
 	var W = img.width;
 	var H = img.height;
+	
+	// make sure the load event fires for cached images too
+	if ( img.complete || img.complete === undefined ) {
+		img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+		img.src = src;
+	}
 	
 	// x,y is pixel
 	// offset: 0 = red, 1 = green, 2 = blue, 3 = alpha
