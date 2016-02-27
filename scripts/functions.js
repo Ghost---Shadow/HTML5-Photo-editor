@@ -6,9 +6,6 @@ $(document).ready(function(){
 
 	var img = new Image();
 
-	// Allow image to be pulled from other sites
-	img.crossOrigin = "Anonymous";
-	
 	// Initialize the image on load
 	img.onload = function(){
 		var W = img.width;
