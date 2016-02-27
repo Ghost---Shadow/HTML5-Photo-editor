@@ -5,11 +5,12 @@ $(document).ready(function(){
 	var ctx = canvas.getContext("2d");	
 
 	var img = new Image();
-	img.crossOrigin = "Anonymous";
+	img.crossOrigin = "";
 
 	// Temporary source for image
-	img.src = "http://i.imgur.com/TsZWr4p.jpg";
-	//img.src = "./cats/original.jpg";
+	//img.src = "http://i.imgur.com/fHyEMsl.jpg";
+	img.src = "http://i.imgur.com/lJLoZ0Q.jpg";
+	//img.src = "./cats/original.jpg";	
 
 	// Initialize the image on load
 	img.onload = function(){
