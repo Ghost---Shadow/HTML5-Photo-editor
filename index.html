@@ -2,16 +2,37 @@
 <html>
 <head>
   <title>HTML5 Photo editor</title>  
-  <link rel="stylesheet" type="text/css" href="style.css">
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.css">
+
   <script type="text/javascript" src="./scripts/jquery-1.12.1.js"></script>
-  <script type="text/javascript" src="./scripts/jquery.getimagedata.min.js"></script>
+  <script type="text/javascript" src="./scripts/bootstrap.js"></script>
   <script type="text/javascript" src="./scripts/functions.js"></script>  
 </head>
 <body>
-<canvas id="cc"></canvas><br>
-<button id="bBlur">Blur</button><br>
-<button id="bSharp">Sharpen</button><br>
-<button id="bSobel">Sobel</button><br>
-<p id = "dump"></p>
+
+<div id="wrap">
+	<div id="header">
+		<h1> HTML5 Canvas Photo Editor </h1>
+	</div>
+	<div id="main">
+      <canvas id="cc"></canvas>
+	</div>
+	<div id="sidebar">
+		<div class="list-group">
+		  <a id = "bBlur" href="#" class="list-group-item">Blur</a>
+		  <a id = "bSharp" href="#" class="list-group-item">Sharp</a>
+		  <a id = "bSobel" href="#" class="list-group-item">Sobel</a>
+		</div>
+	</div>
+	<div id="footer">
+		Created by so and so 
+	</div>
+</div>
 </body>
 </html>

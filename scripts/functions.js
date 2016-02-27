@@ -9,8 +9,8 @@ $(document).ready(function(){
 
 	// Temporary source for image
 	//img.src = "http://i.imgur.com/fHyEMsl.jpg";
-	img.src = "http://i.imgur.com/lJLoZ0Q.jpg";
-	//img.src = "./cats/original.jpg";	
+	//img.src = "http://i.imgur.com/lJLoZ0Q.jpg";
+	img.src = "./cats/original.jpg";	
 
 	// Initialize the image on load
 	img.onload = function(){
@@ -67,6 +67,7 @@ $(document).ready(function(){
 		kernel =	[[1/16, 1/8, 1/16],
 					[1/8 , 1/4, 1/8],
 					[1/16, 1/8, 1/16]];
+		
 	});
 
 	// TEMPORARY: Sharpen the entire image on button click
@@ -82,7 +83,8 @@ $(document).ready(function(){
 		// Kernel for Sobel
 		kernel =	[[ 1,  1,  1],
 					[ 1, -8,  1],
-					[ 1,  1,  1]];		
+					[ 1,  1,  1]];	
+			
 	});	
 	
 	function iterate(){

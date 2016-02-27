@@ -1,5 +1,4 @@
 - Add drag and drop for images
-- Brushes
 - Improve UI
 - Add more functions
 	- Desaturate

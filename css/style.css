@@ -1,0 +1,32 @@
+#cc {
+    /*cursor: url(./BoxCursor.cur), none;*/
+    cursor: crosshair;
+}
+
+body {
+    background-color: lightblue;
+}
+
+#wrap {
+    width:750px;
+    margin:0 auto;
+}
+
+#main {
+    float:right;
+    width:500px;
+}
+#sidebar {
+    float:left;
+    width:100px;
+}
+
+#header{
+    clear: both;
+    padding: 10px;
+}
+
+#footer {
+    clear:both;
+    padding: 10px;
+}
