@@ -9,8 +9,8 @@ $(document).ready(function(){
 
 	// Temporary source for image
 	//img.src = "http://i.imgur.com/fHyEMsl.jpg";
-	//img.src = "http://i.imgur.com/lJLoZ0Q.jpg";
-	img.src = "./cats/original.jpg";	
+	img.src = "http://i.imgur.com/lJLoZ0Q.jpg";
+	//img.src = "./cats/original.jpg";	
 
 	// Initialize the image on load
 	img.onload = function(){
