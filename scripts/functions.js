@@ -6,7 +6,7 @@ $(document).ready(function(){
 
 	var img = new Image();
 	img.crossOrigin = "Anonymous";
-	src = "./cats/original.jpg"
+	src = "http://ghost---shadow.github.io/HTML5-Photo-editor/cats/original.jpg"
 
 	// Initialize the image on load
 	img.onload = function(){
