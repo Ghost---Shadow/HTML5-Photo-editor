@@ -1,0 +1,3 @@
+- Add drag and drop for images
+- Improve UI
+- Add more functions
