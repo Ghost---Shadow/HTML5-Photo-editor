@@ -6,3 +6,4 @@
 	- Crop
 	- Burn
 	- Dodge
+- Refresh page on CORS error
