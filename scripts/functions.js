@@ -8,17 +8,19 @@ $(document).ready(function(){
 	img.crossOrigin = "Anonymous";
 
 	// Temporary source for image
-	img.src = "http://i.imgur.com/TsZWr4p.jpg"
+	img.src = "http://i.imgur.com/TsZWr4p.jpg";
+	//img.src = "./cats/original.jpg";
+
+	// Initialize the image on load
+	img.onload = function(){
+		canvas.width = img.width;
+		canvas.height = img.height;
+		ctx.drawImage(img, 0, 0);
+	}
 
 	var W = img.width;
 	var H = img.height;
-	
-	// make sure the load event fires for cached images too
-	if ( img.complete || img.complete === undefined ) {
-		img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
-		img.src = src;
-	}
-	
+		
 	// x,y is pixel
 	// offset: 0 = red, 1 = green, 2 = blue, 3 = alpha
 	function applyKernel(x,y,offset,data,kernel){
