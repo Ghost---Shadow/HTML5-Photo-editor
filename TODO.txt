@@ -1,9 +1,6 @@
 - Add drag and drop for images
 - Improve UI
-- Add more functions
-	- Desaturate
-	- Crop
-	- Burn
-	- Dodge
 - Thumbnails for each function
 - Refresh page on CORS error
+- Circular brush
+- Brush strength and size slider

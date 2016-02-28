@@ -3,6 +3,8 @@ $(document).ready(function() {
     $("#main").height($("#sidebar").height());
 
     var brushSize = 15;
+    var brushStrength = .25;
+    var kernelType = false;
     var kernel =    [[0, 0, 0], 
                     [0, 1, 0], 
                     [0, 0, 0]];
@@ -39,18 +41,36 @@ $(document).ready(function() {
     });
     
     $("#bSharp").click(function() {
-        // Kernel for Sharpen
+        kernelType = true;
         kernel =    [[0, -1, 0], 
                     [-1, 5, -1], 
                     [0, -1, 0]];
     });
     
     $("#bSobel").click(function() {
-        // Kernel for Sobel
-        kernel = [[1, 1, 1], 
-        [1, -8, 1], 
-        [1, 1, 1]];
+        kernelType = true;
+        kernel =    [[1, 1, 1], 
+                    [1, -8, 1], 
+                    [1, 1, 1]];
     
+    });
+
+    $("#bBurn").click(function(){
+        kernelType = true;
+        kernel =    [[0, 0, 0], 
+                    [0, .9+brushStrength*.1, 0], 
+                    [0, 0, 0]];
+    });
+
+    $("#bDodge").click(function(){
+        kernelType = true;
+        kernel =    [[0, 0, 0], 
+                    [0, 1+brushStrength*.1, 0], 
+                    [0, 0, 0]];
+    });
+
+    $("#bColorPicker").click(function(){
+        kernelType = false;
     });
 
     // x,y is pixel
@@ -67,7 +87,7 @@ $(document).ready(function() {
     }  
     
     // Modify the pixels surrounding the mouse position
-    function iterate() {    
+    function iterate(cX,cY) {    
         if (!mouseDown)
             return;
         
@@ -77,12 +97,7 @@ $(document).ready(function() {
         
         // Get pixel data
         var data1 = img1.data;
-        var data2 = img2.data;
-        
-        // Get mouse coordinates        
-        var rect = canvas.getBoundingClientRect();
-        cX = parseInt((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
-        cY = parseInt((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
+        var data2 = img2.data;        
 
         //console.log(cX + " " + cY);	
         
@@ -106,10 +121,19 @@ $(document).ready(function() {
     }
     var mouseDown = false;
     $("#cc").mousedown(function() {
+        // Get mouse coordinates        
+        var rect = canvas.getBoundingClientRect();
+        cX = parseInt((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
+        cY = parseInt((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);    
+
         mouseDown = true;
-        iterate();
+        if(kernelType)
+            iterate(cX,cY);
         $("#cc").mousemove(function() {
-            iterate();
+            var rect = canvas.getBoundingClientRect();
+            cX = parseInt((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
+            cY = parseInt((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
+            iterate(cX,cY);
         });
     });
     $("#cc").mouseup(function() {
