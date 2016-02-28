@@ -30,16 +30,20 @@ $(document).ready(function() {
     img.src = "http://i.imgur.com/lJLoZ0Q.jpg";
     //img.src = "./cats/original.jpg";	
     
+    var W = 0;
+    var H = 0;
+
     // Initialize the image on load
     img.onload = function() {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
+
+        // Store image width and height
+        W = img.width;
+        H = img.height;  
     }
-    
-    // Store image width and height
-    var W = img.width;
-    var H = img.height;    
+      
     
     $("#bBlur").mousedown(function() {
         kernel =    [[1 / 16, 1 / 8, 1 / 16], 

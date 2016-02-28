@@ -4,3 +4,4 @@
 - Refresh page on CORS error
 - Circular brush
 - Brush strength and size slider
+- Make the colour picker more readable
