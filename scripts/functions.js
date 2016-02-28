@@ -200,12 +200,12 @@ $(document).ready(function() {
     }
 
     var mouseDown = false;
-    $("#cc").mousedown(function() {
+    $("#cc").mousedown(function(event) {
         mouseDown = true;
         coords = getCoords(event);
         takeAction(coords[0],coords[1]);
 
-        $("#cc").mousemove(function() {
+        $("#cc").mousemove(function(event) {
             coords = getCoords(event);
             takeAction(coords[0],coords[1]);
         });
