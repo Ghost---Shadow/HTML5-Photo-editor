@@ -5,4 +5,5 @@
 	- Crop
 	- Burn
 	- Dodge
+- Thumbnails for each function
 - Refresh page on CORS error
