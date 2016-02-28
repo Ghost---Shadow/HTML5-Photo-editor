@@ -4,7 +4,16 @@ $(document).ready(function() {
 
     var brushSize = 15;
     var brushStrength = .25;
-    var kernelType = false;
+    var bEnum = {
+        KERNEL: 0,
+        CROP: 1,
+        CPICK: 2,
+        BRUSH: 3,
+        SATURATE: 4,
+        DESATURATE: 5
+    };
+    var currentType = bEnum.KERNEL;
+    var pickedColor = [255,255,255,255];
     var kernel =    [[0, 0, 0], 
                     [0, 1, 0], 
                     [0, 0, 0]];
@@ -33,22 +42,21 @@ $(document).ready(function() {
     var H = img.height;    
     
     $("#bBlur").mousedown(function() {
-        // Kernel for Gaussian Blur
         kernel =    [[1 / 16, 1 / 8, 1 / 16], 
                     [1 / 8, 1 / 4, 1 / 8], 
                     [1 / 16, 1 / 8, 1 / 16]];
-    
+        currentType = bEnum.KERNEL;
     });
     
     $("#bSharp").click(function() {
-        kernelType = true;
         kernel =    [[0, -1, 0], 
                     [-1, 5, -1], 
                     [0, -1, 0]];
+        currentType = bEnum.KERNEL;           
     });
     
     $("#bSobel").click(function() {
-        kernelType = true;
+        currentType = bEnum.KERNEL;
         kernel =    [[1, 1, 1], 
                     [1, -8, 1], 
                     [1, 1, 1]];
@@ -56,21 +64,25 @@ $(document).ready(function() {
     });
 
     $("#bBurn").click(function(){
-        kernelType = true;
+        currentType = bEnum.KERNEL;
         kernel =    [[0, 0, 0], 
                     [0, .9+brushStrength*.1, 0], 
                     [0, 0, 0]];
     });
 
     $("#bDodge").click(function(){
-        kernelType = true;
+        currentType = bEnum.KERNEL;
         kernel =    [[0, 0, 0], 
                     [0, 1+brushStrength*.1, 0], 
                     [0, 0, 0]];
     });
-
+    
     $("#bColorPicker").click(function(){
-        kernelType = false;
+        currentType = bEnum.CPICK;
+    });
+
+    $("#bBrush").click(function(){
+        currentType = bEnum.BRUSH;
     });
 
     // x,y is pixel
@@ -87,7 +99,7 @@ $(document).ready(function() {
     }  
     
     // Modify the pixels surrounding the mouse position
-    function iterate(cX,cY) {    
+    function kernelIterate(cX,cY) {    
         if (!mouseDown)
             return;
         
@@ -119,21 +131,83 @@ $(document).ready(function() {
         // Put the image data back into the canvas
         ctx.putImageData(img2, 0, 0);
     }
-    var mouseDown = false;
-    $("#cc").mousedown(function() {
-        // Get mouse coordinates        
+
+    function colorPick(x,y){
+        if(!mouseDown)
+            return;
+        var img1 = ctx.getImageData(0, 0, W, H);
+        var data1 = img1.data;
+        var index = (x + y * W) * 4; 
+        pickedColor[0] = data1[index+0];
+        pickedColor[1] = data1[index+1];
+        pickedColor[2] = data1[index+2];
+        pickedColor[3] = data1[index+3];
+
+        $("#bColorPicker").css("background-color",
+        "rgb("+pickedColor[0]+","+pickedColor[1]+","+pickedColor[2]+")");
+        $("#bColorPicker").css("color",
+        "rgb("+(255-pickedColor[0])+","+(255-pickedColor[1])+","+(255-pickedColor[2])+")");
+    }
+
+    function brush(x,y){
+        if(!mouseDown) return;
+        
+        // Get image data 
+        var img = ctx.getImageData(0, 0, W, H);
+        var data = img.data;
+
+        // Make sure the brush starts from red pixel
+        startJ = (y - brushSize / 2) - (y - brushSize / 2) % 4;
+        startI = (x - brushSize / 2) - (x - brushSize / 2) % 4;
+        
+        // Iterate over the pixels
+        for (var j = startJ; j < y + brushSize / 2; j++) {
+            for (var i = startI; i < x + brushSize / 2; i++) {
+                var index = (i + j * W) * 4;
+                data[index + 0] = pickedColor[0];
+                data[index + 1] = pickedColor[1];
+                data[index + 2] = pickedColor[2];
+                data[index + 3] = pickedColor[3];
+            }
+        }
+        // Put the image data back into the canvas
+        ctx.putImageData(img, 0, 0);
+    }
+    
+    // Get mouse coordinates
+    function getCoords(event){
         var rect = canvas.getBoundingClientRect();
         cX = parseInt((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
-        cY = parseInt((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);    
+        cY = parseInt((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
+        return [cX,cY];
+    }
 
+    function takeAction(x,y){
+        switch(currentType){
+        case bEnum.KERNEL:
+            kernelIterate(x,y);
+        break;
+        case bEnum.CROP:break;
+        case bEnum.CPICK:
+            colorPick(x,y);
+        break;
+        case bEnum.BRUSH:
+            brush(x,y);
+        break;
+        case bEnum.SATURATE:break;
+        case bEnum.DESATURATE: break;  
+        }
+    }
+
+    var mouseDown = false;
+    $("#cc").mousedown(function() {
         mouseDown = true;
-        if(kernelType)
-            iterate(cX,cY);
+        coords = getCoords(event);
+        takeAction(coords[0],coords[1]);
+
         $("#cc").mousemove(function() {
-            var rect = canvas.getBoundingClientRect();
-            cX = parseInt((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
-            cY = parseInt((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
-            iterate(cX,cY);
+            coords = getCoords(event);
+            takeAction(coords[0],coords[1]);
         });
     });
     $("#cc").mouseup(function() {
