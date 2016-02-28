@@ -1,0 +1,38 @@
+#cc {
+    /*cursor: url(./BoxCursor.cur), none;*/
+    cursor: crosshair;
+
+    transform: translate(-50%,-50%); 
+    position:relative;
+    top:50%;
+    left:50%;
+}
+
+body {
+    background-color: lightblue;
+}
+
+#wrap {
+    width:750px;
+    margin:0 auto;
+}
+
+#main {
+    float:right;
+    width:600px;
+}
+#sidebar {
+    float:left;
+    width:auto;
+    padding-left:20px;
+}
+
+#header{
+    clear: both;
+    padding: 10px;
+}
+
+#footer {
+    clear:both;
+    padding: 10px;
+}
