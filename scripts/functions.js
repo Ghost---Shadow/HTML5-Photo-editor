@@ -5,12 +5,13 @@ $(document).ready(function() {
     var brushSize = 15;
     var brushStrength = .25;
     var bEnum = {
-        KERNEL: 0,
-        CROP: 1,
-        CPICK: 2,
-        BRUSH: 3,
-        SATURATE: 4,
-        DESATURATE: 5
+        NONE: 0,
+        KERNEL: 1,
+        CROP: 2,
+        CPICK: 3,
+        BRUSH: 4,
+        SATURATE: 5,
+        DESATURATE: 6
     };
     var currentType = bEnum.KERNEL;
     var pickedColor = [255,255,255,255];
@@ -56,15 +57,16 @@ $(document).ready(function() {
         kernel =    [[0, -1, 0], 
                     [-1, 5, -1], 
                     [0, -1, 0]];
-        currentType = bEnum.KERNEL;           
+        currentType = bEnum.NONE; 
+        kernelIterate(0,0,true);        
     });
     
-    $("#bSobel").click(function() {
-        currentType = bEnum.KERNEL;
+    $("#bSobel").click(function() {        
         kernel =    [[1, 1, 1], 
                     [1, -8, 1], 
                     [1, 1, 1]];
-    
+        currentType = bEnum.NONE;
+        kernelIterate(0,0,true);
     });
 
     $("#bBurn").click(function(){
@@ -103,8 +105,8 @@ $(document).ready(function() {
     }  
     
     // Modify the pixels surrounding the mouse position
-    function kernelIterate(cX,cY) {    
-        if (!mouseDown)
+    function kernelIterate(cX,cY,entireImage) {    
+        if (!mouseDown && !entireImage)
             return;
         
         // Get the image and its copy
@@ -118,12 +120,17 @@ $(document).ready(function() {
         //console.log(cX + " " + cY);	
         
         // Make sure the brush starts from red pixel
-        startJ = (cY - brushSize / 2) - (cY - brushSize / 2) % 4;
-        startI = (cX - brushSize / 2) - (cX - brushSize / 2) % 4;
+        var startJ = entireImage?0:(cY - brushSize / 2) - (cY - brushSize / 2) % 4;
+        var startI = entireImage?0:(cX - brushSize / 2) - (cX - brushSize / 2) % 4;
+
+        // Upper bound
+        var endJ = entireImage?H:cY + brushSize / 2;
+        var endI = entireImage?W:cX + brushSize / 2;
         
+
         // Iterate over the pixels
-        for (var j = startJ; j < cY + brushSize / 2; j++) {
-            for (var i = startI; i < cX + brushSize / 2; i++) {
+        for (var j = startJ; j < endJ; j++) {
+            for (var i = startI; i < endI; i++) {
                 var x = (i + j * W) * 4;
                 data2[x + 0] = applyKernel(i, j, 0, data1, kernel); // R
                 data2[x + 1] = applyKernel(i, j, 1, data1, kernel); // G
@@ -188,8 +195,9 @@ $(document).ready(function() {
 
     function takeAction(x,y){
         switch(currentType){
+        case bEnum.NONE: break;
         case bEnum.KERNEL:
-            kernelIterate(x,y);
+            kernelIterate(x,y,false);
         break;
         case bEnum.CROP:break;
         case bEnum.CPICK:

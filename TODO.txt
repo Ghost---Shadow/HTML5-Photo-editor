@@ -1,7 +1,7 @@
 - Add drag and drop for images
 - Improve UI
 - Thumbnails for each function
-- Refresh page on CORS error
 - Circular brush
 - Brush strength and size slider
 - Make the colour picker more readable
+- Add an icon "favicon.ico" in the root directory
