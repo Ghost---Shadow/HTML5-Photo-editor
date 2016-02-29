@@ -4,6 +4,7 @@ $(document).ready(function() {
 
     var brushSize = 15;
     var brushStrength = .5;
+    var circularBrush = true;
     var bEnum = {
         NONE: 0,
         KERNEL: 1,
@@ -113,7 +114,7 @@ $(document).ready(function() {
     }  
     
     // Modify the pixels surrounding the mouse position
-    function kernelIterate(cX,cY,entireImage) {    
+    function kernelIterate(x,y,entireImage) {    
         if (!mouseDown && !entireImage)
             return;
         
@@ -128,22 +129,30 @@ $(document).ready(function() {
         //console.log(cX + " " + cY);	
         
         // Make sure the brush starts from red pixel
-        var startJ = entireImage?0:(cY - brushSize / 2) - (cY - brushSize / 2) % 4;
-        var startI = entireImage?0:(cX - brushSize / 2) - (cX - brushSize / 2) % 4;
-
-        // Upper bound
-        var endJ = entireImage?H:cY + brushSize / 2;
-        var endI = entireImage?W:cX + brushSize / 2;
+        startJ = (y - brushSize / 2) - (y - brushSize / 2) % 4;
+        startI = (x - brushSize / 2) - (x - brushSize / 2) % 4;
         
+        // End points
+        endJ =  entireImage?H:y + brushSize / 2;
+        endI =  entireImage?W:x + brushSize / 2;        
 
         // Iterate over the pixels
+        c = -brushSize/2;
+        RSq = brushSize/2 * brushSize/2;
         for (var j = startJ; j < endJ; j++) {
+            if(circularBrush && !entireImage){
+                cSq = c * c; 
+                offset = parseInt(Math.sqrt(RSq-cSq));       
+                startI = x - offset;  
+                endI = x + offset;  
+                c++;
+            } 
             for (var i = startI; i < endI; i++) {
-                var x = (i + j * W) * 4;
-                data2[x + 0] = applyKernel(i, j, 0, data1, kernel); // R
-                data2[x + 1] = applyKernel(i, j, 1, data1, kernel); // G
-                data2[x + 2] = applyKernel(i, j, 2, data1, kernel); // B 
-                //data2[x+3] = applyKernel(i,j,3,data1,kernel);
+                var index = (i + j * W) * 4;
+                data2[index + 0] = applyKernel(i, j, 0, data1, kernel); // R
+                data2[index + 1] = applyKernel(i, j, 1, data1, kernel); // G
+                data2[index + 2] = applyKernel(i, j, 2, data1, kernel); // B 
+                //data2[index + 3] = applyKernel(i,j,3,data1,kernel);
             }
         }
         
@@ -179,9 +188,22 @@ $(document).ready(function() {
         startJ = (y - brushSize / 2) - (y - brushSize / 2) % 4;
         startI = (x - brushSize / 2) - (x - brushSize / 2) % 4;
         
+        // End points
+        endJ =  y + brushSize / 2;
+        endI =  x + brushSize / 2;        
+
         // Iterate over the pixels
-        for (var j = startJ; j < y + brushSize / 2; j++) {
-            for (var i = startI; i < x + brushSize / 2; i++) {
+        c = -brushSize/2;
+        RSq = brushSize/2 * brushSize/2;
+        for (var j = startJ; j < endJ; j++) {
+            if(circularBrush){
+                cSq = c * c; 
+                offset = parseInt(Math.sqrt(RSq-cSq));       
+                startI = x - offset;  
+                endI = x + offset;  
+                c++;
+            }                          
+            for (var i = startI; i < endI; i++) {
                 var index = (i + j * W) * 4;
                 data[index + 0] = pickedColor[0];
                 data[index + 1] = pickedColor[1];
@@ -203,10 +225,23 @@ $(document).ready(function() {
         // Make sure the brush starts from red pixel
         startJ = (y - brushSize / 2) - (y - brushSize / 2) % 4;
         startI = (x - brushSize / 2) - (x - brushSize / 2) % 4;
-        $("#footer").text(factor+"");
+        
+        // End points
+        endJ =  y + brushSize / 2;
+        endI =  x + brushSize / 2;        
+
         // Iterate over the pixels
-        for (var j = startJ; j < y + brushSize / 2; j++) {
-            for (var i = startI; i < x + brushSize / 2; i++) {
+        c = -brushSize/2;
+        RSq = brushSize/2 * brushSize/2;
+        for (var j = startJ; j < endJ; j++) {
+            if(circularBrush){
+                cSq = c * c; 
+                offset = parseInt(Math.sqrt(RSq-cSq));       
+                startI = x - offset;  
+                endI = x + offset;  
+                c++;
+            } 
+            for (var i = startI; i < endI; i++) {
                 var index = (i + j * W) * 4;
                 color = [data[index + 0],data[index + 1],data[index + 2]];
                 hsv = RGBtoHSV(color);                
