@@ -1,5 +1,8 @@
-- Add drag and drop for images
+auriee
+- Make the colour picker more readable
 - Improve UI
 - Thumbnails for each function
+
+Ghost---Shadow
 - Brush strength and size slider
-- Make the colour picker more readable
+- Add drag and drop for images
