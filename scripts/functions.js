@@ -1,6 +1,7 @@
 $(document).ready(function() {
     
     $("#main").height($("#sidebar").height());
+    $("#cc").css("max-height",$("#sidebar").height());
 
     var brushSize = 15;
     var brushStrength = .5;
@@ -34,16 +35,19 @@ $(document).ready(function() {
     
     var W = 0;
     var H = 0;
-
+    var backImage = null;
     // Initialize the image on load
     img.onload = function() {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
-
+        
         // Store image width and height
         W = img.width;
         H = img.height;  
+
+        // Take a backup
+        backImage = ctx.getImageData(0,0,W,H);
     }
 
     // To enable drag and drop
@@ -65,7 +69,10 @@ $(document).ready(function() {
                 reader.readAsDataURL(file);
             }
         }
-        evt.preventDefault();
+        evt.preventDefault();        
+        W = ctx.canvas.width;
+        H = ctx.canvas.height;
+        backImage = ctx.getImageData(0,0,W,H);
     }, false);   
       
     
@@ -104,6 +111,10 @@ $(document).ready(function() {
         kernel =    [[0, 0, 0], 
                     [0, 1+brushStrength*.1, 0], 
                     [0, 0, 0]];
+    });
+
+    $("#bCrop").click(function(){
+        currentType = bEnum.CROP;
     });
     
     $("#bColorPicker").click(function(){
@@ -277,7 +288,18 @@ $(document).ready(function() {
         // Put the image data back into the canvas
         ctx.putImageData(img, 0, 0);
     }
-    
+
+    // Crop the image
+    var sX,sY;
+    var started = false;
+    function crop(x,y,w,h){
+        var img = ctx.getImageData(x, y, w, h);
+        ctx.canvas.width = w;
+        ctx.canvas.height = h;
+        ctx.putImageData(img,0,0);
+        backImage = img;
+    }
+
     // Get mouse coordinates
     function getCoords(event){
         var rect = canvas.getBoundingClientRect();
@@ -292,7 +314,26 @@ $(document).ready(function() {
         case bEnum.KERNEL:
             kernelIterate(x,y,false);
         break;
-        case bEnum.CROP:break;
+        case bEnum.CROP:
+            if(mouseDown && !started){
+                sX = x;
+                sY = y;
+                started = true;                
+            }
+            if(mouseDown && started){
+                ctx.putImageData(backImage,0,0);
+                //ctx.clearRect(0,0,W,H);
+                ctx.beginPath();
+                ctx.rect(sX,sY,Math.abs(sX-x),Math.abs(sY - y));
+                ctx.stroke();
+                ctx.closePath();
+            }
+            if(!mouseDown && started){
+                crop(sX,sY,Math.abs(sX-x),Math.abs(sY - y));
+                started = false;
+                //alert(sX+" "+sY+" "+x+" "+y);
+            }
+        break;
         case bEnum.CPICK:
             colorPick(x,y);
         break;
@@ -313,14 +354,15 @@ $(document).ready(function() {
         mouseDown = true;
         coords = getCoords(event);
         takeAction(coords[0],coords[1]);
-
         $("#cc").mousemove(function(event) {
             coords = getCoords(event);
             takeAction(coords[0],coords[1]);
         });
     });
     $("#cc").mouseup(function() {
-        mouseDown = false;
+        mouseDown = false;        
+        coords = getCoords(event);
+        takeAction(coords[0],coords[1]);
     });
 
     function RGBtoHSV(color) {

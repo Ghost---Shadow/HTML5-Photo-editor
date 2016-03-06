@@ -5,7 +5,7 @@ auriee
 - Make everything scale down automatically if viewed from phone
 
 Ghost---Shadow
-- Crop and smudge
+- Add undo functionality
 
 sne
 - Hide default cursor
