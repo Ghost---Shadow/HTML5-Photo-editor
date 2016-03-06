@@ -1,14 +1,14 @@
 auriee
-- Brush strength and size slider
 - Thumbnails for each function
 - Make the colour picker more readable
 - Improve UI
+- Make everything scale down automatically if viewed from phone
 
 Ghost---Shadow
-- Add drag and drop for images
 - Crop and smudge
 
 sne
 - Hide default cursor
+- Brush strength and size slider
 - Draw the cursor at the mouse position using canvas
 - The cursor size should change by changing a variable, controlled by brush size slider
